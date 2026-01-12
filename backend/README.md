@@ -37,15 +37,14 @@ curl http://127.0.0.1:8000/
 
 ```
 backend/
-├── main.py                      # FastAPI app and routes
-├── core/
-│   └── config.py               # Application settings
-├── services/
-│   └── services.py             # Business logic
-├── schemas/
-│   └── schemas.py              # Pydantic models
-├── tests/
-│   └── test_price_calculator.py
+├── main.py                      # FastAPI app and routes/
+├── api/                 # Routes et points de terminaison (endpoints)
+├── core/                # Configuration et constantes (config.py)
+├── services/            # Logique métier (Calcul des prix Back to the Future)
+├── schemas/             # Modèles de données (Pydantic)
+├── scripts/             # Scripts utilitaires (setup_env.py)
+├── tests/               # Tests unitaires et d'intégration
+└── Dockerfile           # Configuration Docker Backend
 └── requirements.txt
 ```
 
