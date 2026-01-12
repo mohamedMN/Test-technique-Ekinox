@@ -1,356 +1,244 @@
-# 🎬 DVD Store Manager - Frontend
+# 🎬 DVD Store API
 
-A modern React application for managing DVD sales with real-time price calculation and discount optimization.
+A simple FastAPI service that calculates prices for a DVD shopping cart with special discounts for the "Back to the Future" saga.
 
 ---
 
-## 🚀 Quick Start
+## 📋 Table of Contents
+
+- [Overview](#overview)
+- [Project Structure](#project-structure)
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Running the Server](#running-the-server)
+- [API Endpoints](#api-endpoints)
+- [Pricing Rules](#pricing-rules)
+- [Testing](#testing)
+- [Examples](#examples)
+
+---
+
+## Overview
+
+This backend service exposes two endpoints:
+
+| Endpoint     | Method | Description                          |
+| ------------ | ------ | ------------------------------------ |
+| `/`          | GET    | Health check                         |
+| `/calculate` | POST   | Calculate total price from cart text |
+
+### Key Features
+
+- ✅ Recognizes DVD titles starting with a configurable saga prefix (default: `"Back to the Future"`)
+- ✅ Applies discounts based on the number of **unique** saga titles
+- ✅ Duplicate saga entries are **ignored** (only unique titles count)
+- ✅ Case-insensitive duplicate detection
+
+---
+
+## Project Structure
+
+backend/
+├── main.py # FastAPI app and routes
+├── core/
+│ └── config.py # Application settings (prices, discounts, CORS)
+├── services/
+│ └── services.py # Business logic (price calculation)
+├── schemas/
+│ └── schemas.py # Request/Response Pydantic models
+├── tests/
+│ └── test_price_calculator.py # Unit tests
+├── requirements.txt # Python dependencies
+└── README.md
+
+text
+
+---
+
+## Requirements
+
+- **Python 3.11+**
+- Dependencies (see `requirements.txt`):
+  - `fastapi`
+  - `uvicorn`
+  - `pydantic-settings`
+  - `pytest` (for testing)
+
+---
+
+## Installation
+
+### 1. Clone the repository
 
 ```bash
-# Clone and navigate
-git clone
-cd frontend
+git clone <repository-url>
+cd backend
+2. Create a virtual environment
+Windows (PowerShell)
+PowerShell
 
-# Install dependencies
-npm install
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
 
-# Run development server
-npm run dev
+# If blocked by execution policy, run:
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+Windows (Command Prompt)
+bat
 
-# Open browser
-# http://localhost:5173
-```
+python -m venv .venv
+.venv\Scripts\activate.bat
+macOS / Linux
+Bash
 
----
+python3 -m venv .venv
+source .venv/bin/activate
+3. Install dependencies
+Bash
 
-## 📁 Project Structure
+pip install --upgrade pip
+pip install -r requirements.txt
+Configuration
+All settings are in core/config.py. You can customize:
 
-```
-src/
-├── api/
-│   └── dvdService.js          # API client
-├── assets/                     # Images, fonts, etc.
-├── components/
-│   ├── CartInput.jsx          # Cart input with presets
-│   └── Receipt.jsx            # Receipt display
-├── pages/
-│   ├── Dashboard.jsx          # Main calculator page
-│   └── LandingPage.jsx        # Hero landing page
-├── App.jsx                     # Router & navigation
-├── App.css                     # Global styles
-├── main.jsx                    # Entry point
-└── index.css                   # Tailwind imports
-```
+Setting	Default	Description
+SAGA_PREFIX	"Back to the Future"	Prefix to identify saga titles
+PRICE_BTTF	15.0	Price for saga DVDs
+PRICE_OTHER	20.0	Price for non-saga DVDs
+DISCOUNT_THRESHOLD_1	2	Min unique titles for 1st discount
+DISCOUNT_RATE_1	0.9	10% discount multiplier
+DISCOUNT_THRESHOLD_2	3	Min unique titles for 2nd discount
+DISCOUNT_RATE_2	0.8	20% discount multiplier
+Running the Server
+Bash
 
----
+uvicorn main:app --reload --host 0.0.0.0 --port 8000
+Once running, access the API documentation:
 
-## 🎨 Features
+Documentation	URL
+Swagger UI	http://127.0.0.1:8000/docs
+ReDoc	http://127.0.0.1:8000/redoc
+API Endpoints
+1. Health Check
+http
 
-✅ **Landing Page** - Modern hero section with call-to-action  
-✅ **Cart Input** - Quick preset examples for testing  
-✅ **Real-time Calculation** - Instant price updates  
-✅ **Smart Discounts** - Visual feedback on savings  
-✅ **Responsive Design** - Mobile-first approach  
-✅ **Error Handling** - User-friendly error messages
+GET /
+Response:
 
----
+JSON
 
-## 🔧 Configuration
-
-### Backend API URL
-
-Edit `src/api/dvdService.js`:
-
-```javascript
-const API_BASE_URL = "http://localhost:8000"; // Change for production
-```
-
-### Available Presets
-
-| Preset              | Description           | Use Case            |
-| ------------------- | --------------------- | ------------------- |
-| **Basic**           | 3 unique BTTF titles  | 20% discount demo   |
-| **Promo Mix**       | 2 BTTF + 1 other      | 10% discount demo   |
-| **With Duplicates** | Includes duplicates   | Duplicate pricing   |
-| **No Discount**     | Single title repeated | 0% discount         |
-| **Max Discount**    | 3+ unique BTTF        | Maximum savings     |
-| **Mixed Catalog**   | BTTF + Various        | Real-world scenario |
-
----
-
-## 🛠️ Development
-
-### Run dev server
-
-```bash
-npm run dev
-```
-
-### Build for production
-
-```bash
-npm run build
-```
-
-### Preview production build
-
-```bash
-npm run preview
-```
-
-### Lint code
-
-```bash
-npm run lint
-```
-
----
-
-## 📦 Dependencies
-
-### Core
-
-- **React 18** - UI library
-- **Vite** - Build tool & dev server
-
-### UI/UX
-
-- **Tailwind CSS** - Utility-first styling
-- **Lucide React** - Icon library
-
-### HTTP
-
-- **Axios** (or Fetch API) - API requests
-
----
-
-## 🎯 Component Guide
-
-### `<CartInput />`
-
-Cart textarea with preset buttons.
-
-```jsx
-<CartInput onCalculate={(text) => handleCalculate(text)} isLoading={loading} />
-```
-
-**Props:**
-
-- `onCalculate`: Function called with cart text
-- `isLoading`: Boolean to disable during calculation
-
----
-
-### `<Receipt />`
-
-Displays calculation results.
-
-```jsx
-
-```
-
-**Props:**
-
-- `data`: Object with `total_price` and `details`
-
-**Example data:**
-
-```javascript
 {
-  total_price: 47.0,
-  details: {
-    bttf_count: 2,
-    unique_bttf_count: 2,
-    duplicate_bttf_count: 0,
-    others_count: 1,
-    discount_applied: "10%",
-    saved_amount: 3.0
+  "status": "online",
+  "project": "DVD Store API"
+}
+2. Calculate Price
+http
+
+POST /calculate
+Content-Type: application/json
+Request Body:
+
+JSON
+
+{
+  "raw_text": "Back to the Future\nBack to the Future II\nThe Matrix"
+}
+📝 Each line in raw_text represents one DVD in the cart.
+
+Response:
+
+JSON
+
+{
+  "total_price": 47.0,
+  "details": {
+    "bttf_count": 2,
+    "unique_bttf_count": 2,
+    "others_count": 1,
+    "discount_applied": "10%",
+    "saved_amount": 3.0
   }
 }
-```
+Response Fields:
 
----
+Field	Description
+total_price	Final price after discounts
+bttf_count	Number of unique saga DVDs
+unique_bttf_count	Same as bttf_count
+others_count	Number of non-saga DVDs
+discount_applied	Discount percentage applied
+saved_amount	Amount saved from discount
+Pricing Rules
+text
 
-## 🌐 API Integration
+┌─────────────────────────────────────────────────────────┐
+│                    DISCOUNT TIERS                       │
+├─────────────────────────────────────────────────────────┤
+│  Unique BTTF DVDs  │  Discount  │  Example (3 DVDs)    │
+├────────────────────┼────────────┼──────────────────────┤
+│       1            │    0%      │  1 × 15 = 15€        │
+│       2            │   10%      │  2 × 15 × 0.9 = 27€  │
+│       3+           │   20%      │  3 × 15 × 0.8 = 36€  │
+└─────────────────────────────────────────────────────────┘
 
-### Calculate Cart
+⚠️ Note: Duplicate saga titles are IGNORED (not counted or charged)
+Testing
+Run all tests
+Bash
 
-```javascript
-import { calculateCart } from "./api/dvdService";
+pytest tests/ -v
+Run with coverage report
+Bash
 
-const text = "Back to the Future 1\nInception";
-const result = await calculateCart(text);
-console.log(result.total_price); // 32.5
-```
+pytest tests/ --cov=services --cov-report=html
+Run performance tests only
+Bash
 
-### Error Handling
+pytest tests/ -k performance -v
+Examples
+Using cURL
+Bash
 
-```javascript
-try {
-  const result = await calculateCart(text);
-  setResult(result);
-} catch (error) {
-  setError("Unable to calculate. Please try again.");
-}
-```
+curl -X POST "http://127.0.0.1:8000/calculate" \
+  -H "Content-Type: application/json" \
+  -d '{"raw_text":"Back to the Future\nBack to the Future II\nThe Matrix"}'
+Using PowerShell
+PowerShell
 
----
+$body = @{
+    raw_text = "Back to the Future`nBack to the Future II`nThe Matrix"
+} | ConvertTo-Json
 
-## 🎨 Styling
+Invoke-RestMethod -Uri "http://127.0.0.1:8000/calculate" -Method POST -Body $body -ContentType "application/json"
+Using Python
+Python
 
-### Tailwind Configuration
+import requests
 
-The project uses Tailwind's utility classes. Custom colors:
+response = requests.post(
+    "http://127.0.0.1:8000/calculate",
+    json={"raw_text": "Back to the Future\nBack to the Future II\nThe Matrix"}
+)
+print(response.json())
+Quick Start Summary
+Bash
 
-```javascript
-// tailwind.config.js
-theme: {
-  extend: {
-    colors: {
-      primary: '#2563eb',  // Blue-600
-      success: '#10b981',  // Green-500
-      warning: '#f59e0b',  // Amber-500
-    }
-  }
-}
-```
+# 1. Create virtual environment
+python -m venv .venv
 
-### Global Styles
+# 2. Activate it
+source .venv/bin/activate  # Linux/Mac
+# or
+.\.venv\Scripts\Activate.ps1  # Windows PowerShell
 
-Located in `src/index.css`:
+# 3. Install dependencies
+pip install -r requirements.txt
 
-```css
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-```
+# 4. Run server
+uvicorn main:app --reload --port 8000
 
----
-
-## 🧪 Testing Scenarios
-
-### Scenario 1: No Discount
-
-**Input:**
-
-```
-Back to the Future 1
-Back to the Future 1
-```
-
-**Expected:** 30€ (2 × 15€, no discount)
-
-### Scenario 2: 10% Discount
-
-**Input:**
-
-```
-Back to the Future 1
-Back to the Future 2
-The Matrix
-```
-
-**Expected:** 47€ (27€ + 20€)
-
-### Scenario 3: 20% Discount
-
-**Input:**
-
-```
-Back to the Future 1
-Back to the Future 2
-Back to the Future 3
-```
-
-**Expected:** 36€ (3 × 15€ × 0.8)
-
----
-
-## 📱 Responsive Breakpoints
-
-| Breakpoint | Width          | Layout        |
-| ---------- | -------------- | ------------- |
-| Mobile     | < 768px        | Single column |
-| Tablet     | 768px - 1024px | Single column |
-| Desktop    | > 1024px       | Two columns   |
-
----
-
-## 🚀 Deployment
-
-### Vercel
-
-```bash
-npm run build
-vercel --prod
-```
-
-### Netlify
-
-```bash
-npm run build
-netlify deploy --prod --dir=dist
-```
-
-### Docker
-
-```dockerfile
-FROM node:18-alpine
-WORKDIR /app
-COPY package*.json ./
-RUN npm ci
-COPY . .
-RUN npm run build
-CMD ["npm", "run", "preview"]
-```
-
----
-
-## 🔒 Environment Variables
-
-Create `.env` file:
-
-```bash
-VITE_API_URL=http://localhost:8000
-VITE_APP_NAME="DVD Store Manager"
-```
-
-Access in code:
-
-```javascript
-const apiUrl = import.meta.env.VITE_API_URL;
-```
-
----
-
-## 🐛 Troubleshooting
-
-### CORS Errors
-
-Ensure backend has proper CORS configuration:
-
-```python
-# backend/core/config.py
-CORS_ORIGINS = ["http://localhost:5173"]
-```
-
-### Build Fails
-
-```bash
-# Clear cache
-rm -rf node_modules dist
-npm install
-npm run build
-```
-
-### API Connection Issues
-
-Check `dvdService.js` API_BASE_URL matches backend port.
-
----
-
-## 📄 License
-
+# 5. Test the API
+curl http://127.0.0.1:8000/
+License
 MIT License
-
----
+```
