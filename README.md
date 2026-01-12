@@ -9,7 +9,7 @@
 ### Installation en 2 commandes
 ```bash
 # 1. Cloner le projet
-git clone https://github.com/votre-username/dvd-store.git
+git clone https://github.com/mohamedMN/Test-technique-Ekinox
 cd dvd-store
 
 # 2. Lancer avec Docker Compose
