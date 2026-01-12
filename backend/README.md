@@ -20,6 +20,10 @@ source .venv/bin/activate  # Linux/Mac
 # Install dependencies
 pip install -r requirements.txt
 
+# Configuration (Important)
+
+python scripts/setup_env.py
+
 # Run server
 uvicorn main:app --reload --port 8000
 
