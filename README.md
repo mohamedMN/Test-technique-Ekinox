@@ -19,7 +19,7 @@ Avant de lancer l'application, exécutez le script de configuration pour génér
 
 Bash:
 
-python scripts/setup_env.py
+python backend/scripts/setup_env.py
 
 # 2. Lancer avec Docker Compose
 docker-compose up --build
