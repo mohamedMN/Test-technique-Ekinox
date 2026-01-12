@@ -15,16 +15,17 @@ Plaintext
 
 frontend/
 ├── src/
-│   ├── api/          # API service calls and configurations
-│   ├── assets/       # Static assets like images and fonts
-│   ├── components/   # Reusable UI components
-│   ├── pages/        # Main page/view components
-│   ├── App.jsx       # Main application component
-│   └── main.jsx      # Application entry point
-├── public/           # Public static files
-├── Dockerfile        # Docker configuration
-├── vite.config.js    # Vite configuration
-└── eslint.config.js  # Linting rules
+│ ├── api/ # API service calls and configurations
+│ ├── assets/ # Static assets like images and fonts
+│ ├── components/ # Reusable UI components
+│ ├── pages/ # Main page/view components
+│ ├── App.jsx # Main application component
+│ └── main.jsx # Application entry point
+├── public/ # Public static files
+├── Dockerfile # Docker configuration
+├── vite.config.js # Vite configuration
+└── eslint.config.js # Linting rules
+
 🛠️ Getting Started
 Prerequisites
 Node.js (Latest LTS recommended)
