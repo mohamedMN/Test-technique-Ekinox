@@ -1,0 +1,21 @@
+# --- Python Specific ---
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.benchmarks/
+
+# --- Environment & Virtual Envs ---
+.env
+.venv/
+venv/
+env/
+ENV/
+
+# --- Tooling & IDEs ---
+.qodo/
+.vscode/
+.idea/
+
+# --- Docker Local Artifacts ---
+.dockerignore

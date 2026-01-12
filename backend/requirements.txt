@@ -1,0 +1,9 @@
+# --- Framework & Serveur ---
+fastapi
+uvicorn
+
+pydantic-settings
+
+pydantic
+pytest
+pytest-benchmark
